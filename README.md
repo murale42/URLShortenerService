@@ -23,7 +23,6 @@ REST API-сервис для сокращения длинных URL в коро
 1. Клонируйте репозиторий:
 
 - `git clone https://github.com/murale42/URLShortenerService.git`
-- `cd url-shortener`
 
 2.Создайте и активируйте виртуальное окружение (можно пропустить этот шаг):
 

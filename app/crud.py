@@ -81,4 +81,29 @@ def get_link_by_code(db: Session, short_code: str):
     return db.query(models.Link).filter(models.Link.short_code == short_code).first()
 
 def get_link_statistics(db: Session):
-    return db.query(models.Link).order_by(desc(models.Link.clicks)).all()
+    now = datetime.utcnow()
+    one_day_ago = now - timedelta(days=1)
+    one_hour_ago = now - timedelta(hours=1)
+
+    stats = []
+
+    links = db.query(models.Link).all()
+    for link in links:
+        total_clicks = link.clicks
+        clicks_last_day = db.query(models.LinkClick).filter(
+            models.LinkClick.link_id == link.id,
+            models.LinkClick.timestamp >= one_day_ago
+        ).count()
+        clicks_last_hour = db.query(models.LinkClick).filter(
+            models.LinkClick.link_id == link.id,
+            models.LinkClick.timestamp >= one_hour_ago
+        ).count()
+
+        stats.append(schemas.LinkStats(
+            short_code=link.short_code,
+            total_clicks=total_clicks,
+            clicks_last_day=clicks_last_day,
+            clicks_last_hour=clicks_last_hour
+        ))
+
+    return stats

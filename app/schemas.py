@@ -18,7 +18,9 @@ class LinkOut(BaseModel):
 
 class LinkStats(BaseModel):
     short_code: str
-    clicks: int
+    total_clicks: int
+    clicks_last_day: int
+    clicks_last_hour: int
 
     class Config:
         from_attributes = True

@@ -94,6 +94,8 @@ async def redirect_to_original(short_code: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=410, detail="Link is deactivated")
     if datetime.utcnow() > link.expires_at:
         raise HTTPException(status_code=410, detail="Link has expired")
+
     link.clicks += 1
+    db.add(models.LinkClick(link_id=link.id))
     db.commit()
     return RedirectResponse(link.original_url)
